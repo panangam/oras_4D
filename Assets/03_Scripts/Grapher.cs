@@ -304,16 +304,21 @@ public class Grapher : MonoBehaviour{
 		GameObject m1 = Instantiate(mesh1Prefab) as GameObject;
 		Mesh mesh1 = new Mesh();
 		m1.GetComponent<MeshFilter>().mesh = mesh1;
+
 		Vector3[] vs = new Vector3[Sres*Tres];
+		Vector2[] uvs = new Vector2[vs.Length];
 		Color[] colors = new Color[vs.Length];
+
 		for(int i=0; i<Sres; i++){
 			for(int j=0; j<Tres; j++){
 				vs[i*Tres+j] = points[i, j].transform.position;
 				colors[i*Tres+j] = Color.Lerp(Color.red, Color.green, (float)((float)(i+j)/3.14159/2));
+				uvs[i*Tres+j] = new Vector2((float) i / Sres, (float) j / Tres);
 			}
 		}
 		mesh1.vertices = vs;
 		mesh1.colors = colors;
+		mesh1.uv = uvs;
 		// int[] tris = new int[Tres*Sres*3]; //NOTE: works
 		int[] tris1 = new int[Sres*Tres*3*2];
 		for(int i=0; i<Sres; i++){
@@ -338,6 +343,7 @@ public class Grapher : MonoBehaviour{
 		Mesh mesh2 = new Mesh();
 		m2.GetComponent<MeshFilter>().mesh = mesh2;
 		mesh2.vertices = vs;
+		mesh2.uv = uvs;
 		int[] tris2 = new int[Sres*Tres*3*2];
 		for(int i=0; i<Sres; i++){
 			for(int j=0; j<Tres; j++){
