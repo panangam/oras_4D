@@ -314,6 +314,7 @@ public class Grapher : MonoBehaviour{
 		Vector2[] uvs = new Vector2[vs.Length];
 		Color[] colors = new Color[vs.Length];
 
+		// create vertices list
 		for(int i=0; i<=Sres; i++){
 			for(int j=0; j<=Tres; j++){
 				vs[i*(Tres+1)+j] = points[i%Sres, j%Tres].transform.position;
@@ -366,10 +367,10 @@ public class Grapher : MonoBehaviour{
 		m2.transform.parent = meshParent;
 	}
 	void UpdateMesh(){
-		Vector3[] vs = new Vector3[Sres*Tres];
-		for(int i=0; i<Sres; i++){
-			for(int j=0; j<Tres; j++){
-				vs[i*Tres+j] = points[i, j].transform.localPosition;
+		Vector3[] vs = new Vector3[(Sres+1)*(Tres+1)];
+		for(int i=0; i<=Sres; i++){
+			for(int j=0; j<=Tres; j++){
+				vs[i*(Tres+1)+j] = points[i%Sres, j%Tres].transform.localPosition;
 			}
 		}
 		transform.Find("Meshes").Find("Mesh1P(Clone)").GetComponent<MeshFilter>().mesh.vertices = vs;
