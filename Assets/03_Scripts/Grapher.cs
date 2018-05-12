@@ -301,21 +301,27 @@ public class Grapher : MonoBehaviour{
 	}
 	void CreateMeshes(){
 		Transform meshParent = transform.Find("Meshes");
+
 		GameObject m1 = Instantiate(mesh1Prefab) as GameObject;
 		Mesh mesh1 = new Mesh();
 		m1.GetComponent<MeshFilter>().mesh = mesh1;
 
-		Vector3[] vs = new Vector3[Sres*Tres];
+		GameObject m2 = Instantiate(mesh2Prefab) as GameObject;
+		Mesh mesh2 = new Mesh();
+		m2.GetComponent<MeshFilter>().mesh = mesh2;
+
+		Vector3[] vs = new Vector3[(Sres+1)*(Tres+1)];
 		Vector2[] uvs = new Vector2[vs.Length];
 		Color[] colors = new Color[vs.Length];
 
-		for(int i=0; i<Sres; i++){
-			for(int j=0; j<Tres; j++){
-				vs[i*Tres+j] = points[i, j].transform.position;
-				colors[i*Tres+j] = Color.Lerp(Color.red, Color.green, (float)((float)(i+j)/3.14159/2));
-				uvs[i*Tres+j] = new Vector2((float) i / Sres, (float) j / Tres);
+		for(int i=0; i<=Sres; i++){
+			for(int j=0; j<=Tres; j++){
+				vs[i*(Tres+1)+j] = points[i%Sres, j%Tres].transform.position;
+				colors[i*(Tres+1)+j] = Color.Lerp(Color.red, Color.green, (float) i/Sres);
+				uvs[i*(Tres+1)+j] = new Vector2((float) i / Sres, (float) j / Tres);
 			}
 		}
+
 		mesh1.vertices = vs;
 		mesh1.colors = colors;
 		mesh1.uv = uvs;
@@ -324,38 +330,35 @@ public class Grapher : MonoBehaviour{
 		for(int i=0; i<Sres; i++){
 			for(int j=0; j<Tres; j++){
 				int ind = (j+i*Tres)*3;
-				tris1[ind] = j+i*Tres;
-				tris1[ind+1] = (j+(i+1)*Tres)%(Sres*Tres);
-				tris1[ind+2] = ((j+1)%Tres+(i+1)*Tres)%(Sres*Tres);
+				tris1[ind] = i*(Tres+1)+j;
+				tris1[ind+1] = i*(Tres+1)+j+1;
+				tris1[ind+2] = (i+1)*(Tres+1)+j+1;
 
 				int ind2 = (j + i*Tres + Sres*Tres)*3;
-				tris1[ind2] = j+i*Tres;
-				tris1[ind2+1] = ((j+1)%Tres+(i+1)*Tres)%(Sres*Tres);
-				tris1[ind2+2] = ((j+1)%Tres+i*Tres)%(Sres*Tres);
-
+				tris1[ind2] = i*(Tres+1)+j;
+				tris1[ind2+1] = (i+1)*(Tres+1)+j+1;
+				tris1[ind2+2] = (i+1)*(Tres+1)+j;
 			}
 		}
 		mesh1.triangles = tris1;
 		mesh1.RecalculateNormals();
 		m1.transform.parent = meshParent;
 
-		GameObject m2 = Instantiate(mesh2Prefab) as GameObject;
-		Mesh mesh2 = new Mesh();
-		m2.GetComponent<MeshFilter>().mesh = mesh2;
 		mesh2.vertices = vs;
+		mesh2.colors = colors;
 		mesh2.uv = uvs;
 		int[] tris2 = new int[Sres*Tres*3*2];
 		for(int i=0; i<Sres; i++){
 			for(int j=0; j<Tres; j++){
 				int ind = (j+i*Tres)*3;
-				tris2[ind] = j+i*Tres;
-				tris2[ind+1] = ((j+1)%Tres+i*Tres)%(Sres*Tres);
-				tris2[ind+2] = ((j+1)%Tres+(i+1)*Tres)%(Sres*Tres);
+				tris2[ind] = i*(Tres+1)+j;
+				tris2[ind+1] = (i+1)*(Tres+1)+j+1;
+				tris2[ind+2] = i*(Tres+1)+j+1;
 
 				int ind2 = (j + i*Tres + Sres*Tres)*3;
-				tris2[ind2] = j+i*Tres;
-				tris2[ind2+1] = ((j+1)%Tres+(i+1)*Tres)%(Sres*Tres);
-				tris2[ind2+2] = (j+(i+1)*Tres)%(Sres*Tres);
+				tris2[ind2] = i*(Tres+1)+j;
+				tris2[ind2+1] = (i+1)*(Tres+1)+j;
+				tris2[ind2+2] =  (i+1)*(Tres+1)+j+1;
 			}
 		}
 		mesh2.triangles = tris2;
