@@ -1417,8 +1417,8 @@ MonoBehaviour:
     type: 2}
   pointPrefab: {fileID: 1587370282107790, guid: a3069205c8d77c942adb2b92ca16ae4a,
     type: 2}
-  Sres: 20
-  Tres: 20
+  Sres: 4
+  Tres: 4
   maxS: 7.068577
   maxT: 7.0685773
   minS: 0.7853975
